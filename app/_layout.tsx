@@ -1,13 +1,12 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { Appearance } from 'react-native';
+import {Colors} from '@/constants/Colors';
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = Appearance.getColorScheme();
+
+  const theme = colorScheme === 'dark' ? Colors.dark : Colors.light;
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -18,15 +17,11 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        {/* <Stack.Screen name="(coffee)" options={{ headerShown: false }} /> */}
-        {/* <Stack.Screen name="index" options = {{ title: "Home", headerShown: false}} />
-        <Stack.Screen name="explore" options={{ title: 'Explore' }} /> */}
-        <Stack.Screen name="+not-found" />
+      <Stack screenOptions={{headerStyle: { backgroundColor: theme.headerBackground }, headerTintColor: theme.text, headerShadowVisible: false}}>
+        <Stack.Screen name="index" options={{ headerShown: false, title: "home" }} />
+        <Stack.Screen name="explore" options={{ headerShown: true, title: "explore", headerTitle: "Explore Us" }} />
+        <Stack.Screen name="menu" options={{ headerShown: false, title: "menu", headerTitle: "Menu Us" }} />
+        <Stack.Screen name="+not-found" options={{ headerShown: false}}/>
       </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
   );
 }
